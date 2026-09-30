@@ -1,0 +1,11 @@
+# Entorno virtual
+venv/
+.venv/
+
+# Archivos de DuckDB / Base de datos si llegaran a generarse
+*.duckdb
+*.db
+
+# Cache de Python
+__pycache__/
+*.pyc
