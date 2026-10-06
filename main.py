@@ -5,7 +5,7 @@ def main():
     # Conexión embebida en memoria
     con = duckdb.connect(database=':memory:')
     
-    csv_file_path = 'data/uk_climate.csv'
+    csv_file_path = 'Data/uk_climate.csv'
     
     print("=== 1. Registro y Vista Previa del Dataset ===")
     # Consulta directa sobre el archivo CSV (Punto 4)
@@ -21,7 +21,7 @@ def main():
     # Consulta 1: Conteo y Limpieza (Filtrado de nulos)
     # -------------------------------------------------------------
     start_time = time.time()
-    print("=== Consulta 1: Resumen de registros válidos por estación ===")
+    print("=== Consulta 1: Resumen de registros válidos por década ===")
     q1 = con.execute(f"""
         SELECT 
             decade,
@@ -44,7 +44,7 @@ def main():
         SELECT 
             month AS mes,
             ROUND(AVG(temp), 2) AS temp_promedio,
-            ROUND(AVG(precipitation), 2) AS precipitacion_total
+            ROUND(AVG(precipitation), 2) AS precipitacion_promedio
         FROM read_csv_auto('{csv_file_path}')
         WHERE temp IS NOT NULL
         GROUP BY month
@@ -76,6 +76,26 @@ def main():
         LIMIT 10
     """).df()
     print(q3)
+    print(f"Tiempo de ejecución: {(time.time() - start_time) * 1000:.2f} ms\n")
+
+    # -------------------------------------------------------------
+    # Consulta 4: Máximos Históricos por Estación
+    # -------------------------------------------------------------
+    start_time = time.time()
+    print("=== Consulta 4: Máximos históricos por estación ===")
+    q4 = con.execute(f"""
+        SELECT 
+            season AS estacion,
+            ROUND(MAX(temp), 2) AS temp_maxima,
+            ROUND(MIN(temp), 2) AS temp_minima,
+            ROUND(MAX(precipitation), 2) AS precipitacion_maxima,
+            ROUND(MAX(wind_speed), 2) AS viento_maximo,
+            COUNT(*) AS total_registros
+        FROM read_csv_auto('{csv_file_path}')
+        GROUP BY season
+        ORDER BY temp_maxima DESC
+    """).df()
+    print(q4)
     print(f"Tiempo de ejecución: {(time.time() - start_time) * 1000:.2f} ms\n")
 
 if __name__ == "__main__":
