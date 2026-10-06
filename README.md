@@ -45,7 +45,7 @@ Necesitas Python 3 y las siguientes dependencias:
 
 ```bash
 git clone https://github.com/Diegol2022/Analisis-con-DuckDB-e-SQL
-cd duckdb-weather-analysis
+cd Analisis-con-DuckDB-e-SQL
 ```
 
 2. Crea un entorno virtual (opcional pero recomendado):
